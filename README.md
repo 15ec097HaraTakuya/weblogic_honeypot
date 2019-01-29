@@ -17,7 +17,27 @@ It is released under the MIT license for the use of the community, pull requests
 
 * Run without parameters to listen on default port (8080):
 
-    > python weblogic_server.py
+    >sudo apt -y install ufw
+    > ufw default DENY
+    >sudo ufw allow 8080
+    >sudo ufw allow 80
+    >sudo ufw allow 7001
+    >Rules updated
+    >sudo ufw enable
+    >vi /etc/ufw/before.rules
+
+        # Don't delete these required lines, otherwise there will be errors
+        *nat
+        :PREROUTING ACCEPT [0:0]
+        -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 7001
+        -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 7001
+        COMMIT
+
+        *filter
+
+    >reboot
+    > bash startup.sh
+    > python weblogic_server.py -p 7001
 
 * Run with --help to see other command line parameters
 
